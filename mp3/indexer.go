@@ -2,52 +2,36 @@ package mp3
 
 import (
 	"os"
+	"sort"
 	"strings"
-
-	// https://github.com/mikkyang/id3-go
-	id3 "github.com/mikkyang/id3-go"
 
 	"path/filepath"
 )
 
-// TrackInfo Struct containing the track information.
-type TrackInfo struct {
-	Artist      string
-	Album       string
-	Title       string
-	TrackNumber string
-	Filename    string
-}
+var musicLibraryIndex []artistInfo
 
+var sortedArtists []string
 var tracks []TrackInfo
 
-func cleanUpTagValue(originalValue string) string {
+// RefreshLibrary refresh the artist library.
+func RefreshLibrary(sourceDir string) {
+	filepath.Walk(sourceDir, indexMp3)
 
-	cleanValue := strings.TrimSuffix(originalValue, "\u0000")
-	cleanValue = strings.TrimSpace(cleanValue)
-
-	return cleanValue
+	// Generate sorted artist list.
+	for i := range musicLibraryIndex {
+		sortedArtists = append(sortedArtists, musicLibraryIndex[i].Artist)
+		sort.Strings(sortedArtists)
+	}
 }
 
-func readTrackInfo(filename string) TrackInfo {
-	mp3File, _ := id3.Open(filename)
-	defer mp3File.Close()
+// GetTracks returns tracks found in library
+func GetTracks() []TrackInfo {
+	return tracks
+}
 
-	tagVersion := mp3File.Version()
-	var track TrackInfo
-	track.Artist = cleanUpTagValue(mp3File.Artist())
-	track.Album = cleanUpTagValue(mp3File.Album())
-	track.Title = cleanUpTagValue(mp3File.Title())
-
-	// Skip id3 v1 for now.
-	track.TrackNumber = "NA"
-	if tagVersion >= "2.2.0" {
-		track.TrackNumber = cleanUpTagValue(mp3File.Frame("TRCK").String())
-	}
-
-	track.Filename = filename
-
-	return track
+// GetArtists retrieve the list of indexed artists, sorted alphabetically
+func GetArtists() []string {
+	return sortedArtists
 }
 
 func indexMp3(path string, info os.FileInfo, err error) error {
@@ -57,18 +41,33 @@ func indexMp3(path string, info os.FileInfo, err error) error {
 	}
 
 	if strings.HasSuffix(path, ".mp3") {
-		tracks = append(tracks, readTrackInfo(path))
+		trackInfo := readTrackInfo(path)
+
+		getArtistStructure(trackInfo.Artist)
+
+		tracks = append(tracks, trackInfo)
 	}
 
 	return nil
 }
 
-// RefreshLibrary refresh the artist library.
-func RefreshLibrary(sourceDir string) {
-	filepath.Walk(sourceDir, indexMp3)
-}
+func getArtistStructure(artist string) artistInfo {
 
-// GetTracks returns tracks found in library
-func GetTracks() []TrackInfo {
-	return tracks
+	var create = true
+	var artInfo artistInfo
+
+	for i := range musicLibraryIndex {
+		if musicLibraryIndex[i].Artist == artist {
+			artInfo = musicLibraryIndex[i]
+			create = false
+			break
+		}
+	}
+
+	if create {
+		artInfo = artistInfo{artist, make([]albumInfo, 1)}
+		musicLibraryIndex = append(musicLibraryIndex, artInfo)
+	}
+
+	return artInfo
 }

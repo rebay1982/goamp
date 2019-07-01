@@ -1,8 +1,6 @@
 package web
 
 import (
-	"fmt"
-
 	"github.com/rebay1982/goamp/mp3"
 )
 
@@ -29,26 +27,28 @@ func (s *Service) StartService() {
 
 // GetArtists retrive all artists
 func (s *Service) GetArtists() []string {
-	var artists []string
+	return mp3.GetArtists()
 
-	for i := range s.tracks {
-		var artist = s.tracks[i].Artist
+	// var artists []string
 
-		var skip = false
-		for j := range artists {
+	// for i := range s.tracks {
+	// 	var artist = s.tracks[i].Artist
 
-			if artists[j] == artist {
-				skip = true
-				break // No need to go through the rest.
-			}
-		}
+	// 	var skip = false
+	// 	for j := range artists {
 
-		if !skip {
-			artists = append(artists, artist)
-		}
-	}
+	// 		if artists[j] == artist {
+	// 			skip = true
+	// 			break // No need to go through the rest.
+	// 		}
+	// 	}
 
-	return artists
+	// 	if !skip {
+	// 		artists = append(artists, artist)
+	// 	}
+	// }
+
+	// return artists
 }
 
 // GetArtistAlbums retrive an artist's albums
@@ -69,7 +69,6 @@ func (s *Service) GetArtistAlbums(artist string) []string {
 			}
 
 			if !skip {
-				fmt.Printf("Catch the album %s", album)
 				albums = append(albums, album)
 			}
 
