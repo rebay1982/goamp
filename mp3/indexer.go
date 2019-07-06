@@ -43,7 +43,7 @@ func indexMp3(path string, info os.FileInfo, err error) error {
 	if strings.HasSuffix(path, ".mp3") {
 		trackInfo := readTrackInfo(path)
 
-		getArtistStructure(trackInfo.Artist)
+		//getArtistStructure(trackInfo.Artist)
 
 		tracks = append(tracks, trackInfo)
 	}
@@ -51,23 +51,23 @@ func indexMp3(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-func getArtistStructure(artist string) artistInfo {
+// func getArtistStructure(artist string) artistInfo {
 
-	var create = true
-	var artInfo artistInfo
+// 	var create = true
+// 	var artInfo artistInfo
 
-	for i := range musicLibraryIndex {
-		if musicLibraryIndex[i].Artist == artist {
-			artInfo = musicLibraryIndex[i]
-			create = false
-			break
-		}
-	}
+// 	for i := range musicLibraryIndex {
+// 		if musicLibraryIndex[i].Artist == artist {
+// 			artInfo = musicLibraryIndex[i]
+// 			create = false
+// 			break
+// 		}
+// 	}
 
-	if create {
-		artInfo = artistInfo{artist, make([]albumInfo, 1)}
-		musicLibraryIndex = append(musicLibraryIndex, artInfo)
-	}
+// 	if create {
+// 		artInfo = artistInfo{artist, make([]albumInfo, 1)}
+// 		musicLibraryIndex = append(musicLibraryIndex, artInfo)
+// 	}
 
-	return artInfo
-}
+// 	return artInfo
+// }

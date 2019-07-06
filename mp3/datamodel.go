@@ -1,13 +1,20 @@
 package mp3
 
+type mediaIndex struct {
+	SortedArtists []string
+	Artists       map[string]artistInfo
+}
+
 type artistInfo struct {
-	Artist    string
-	AlbumTree []albumInfo
+	Artist       string
+	SortedAlbums []string
+	Albums       map[string]albumInfo
 }
 
 type albumInfo struct {
-	Album  string
-	Tracks []TrackInfo
+	Album        string
+	SortedTracks []string
+	Tracks       []TrackInfo
 }
 
 // TrackInfo Struct containing the track information.

@@ -28,27 +28,6 @@ func (s *Service) StartService() {
 // GetArtists retrive all artists
 func (s *Service) GetArtists() []string {
 	return mp3.GetArtists()
-
-	// var artists []string
-
-	// for i := range s.tracks {
-	// 	var artist = s.tracks[i].Artist
-
-	// 	var skip = false
-	// 	for j := range artists {
-
-	// 		if artists[j] == artist {
-	// 			skip = true
-	// 			break // No need to go through the rest.
-	// 		}
-	// 	}
-
-	// 	if !skip {
-	// 		artists = append(artists, artist)
-	// 	}
-	// }
-
-	// return artists
 }
 
 // GetArtistAlbums retrive an artist's albums
